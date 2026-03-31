@@ -1,0 +1,95 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: fair-competition-db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: fair_competition
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - fair-competition-network
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: fair-competition-cache
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - fair-competition-network
+
+  # Flask Backend
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: fair-competition-backend
+    environment:
+      FLASK_ENV: production
+      FLASK_PORT: 5000
+      DATABASE_URL: postgresql://admin:password@postgres:5432/fair_competition
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:-your-secret-key-change-in-production}
+    ports:
+      - "5000:5000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - fair-competition-network
+
+  # React Frontend
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    container_name: fair-competition-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    environment:
+      REACT_APP_API_URL: http://localhost:5000
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - fair-competition-network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  fair-competition-network:
+    driver: bridge

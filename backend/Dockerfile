@@ -1,0 +1,80 @@
+version: "3.9"
+
+services:
+
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: fair_backend
+    restart: always
+    ports:
+      - "5000:5000"
+    env_file:
+      - ../backend/.env
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - ../backend:/app
+    networks:
+      - fair_network
+
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    container_name: fair_frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    volumes:
+      - ../frontend:/app
+    networks:
+      - fair_network
+
+  db:
+    image: postgres:15
+    container_name: fair_db
+    restart: always
+    environment:
+      POSTGRES_DB: fair_competition
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - fair_network
+
+  redis:
+    image: redis:7
+    container_name: fair_redis
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - fair_network
+
+  nginx:
+    image: nginx:latest
+    container_name: fair_nginx
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - frontend
+      - backend
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      - fair_network
+
+volumes:
+  postgres_data:
+
+networks:
+  fair_network:

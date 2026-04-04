@@ -1,7 +1,7 @@
 import jwt
 import datetime
 import os
-from app.database.db import db
+from app.database import db
 from app.models.user_model import User
 
 
@@ -13,11 +13,11 @@ class AuthService:
     # Register User
     # ------------------------
     @staticmethod
-    def register_user(username, email, password, role="student"):
+    def register_user(username, email, password, full_name, roll_number, role="student"):
         """Business logic for creating a new user"""
 
         existing_user = User.query.filter(
-            (User.email == email) | (User.username == username)
+            (User.email == email) | (User.username == username) | (User.roll_number == roll_number)
         ).first()
 
         if existing_user:
@@ -26,6 +26,8 @@ class AuthService:
         new_user = User(
             username=username,
             email=email,
+            full_name=full_name,
+            roll_number=roll_number,
             role=role
         )
 

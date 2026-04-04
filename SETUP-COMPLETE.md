@@ -95,7 +95,7 @@ You'll see the login page. Click "Create Account" to register.
 ## 📝 File Structure
 
 ```
-fair-comprtition-app-2/
+fair-comprtition-app/
 │
 ├── 📄 start.bat              ← Click me (Windows)
 ├── 📄 start.sh               ← Run me (Mac/Linux)
@@ -222,9 +222,6 @@ docker-compose up postgres
 # Wait 10 seconds
 docker-compose up
 ```
-
-
-
 
 ### Frontend Not Loading
 ```bash

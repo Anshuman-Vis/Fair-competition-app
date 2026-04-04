@@ -1,6 +1,6 @@
 import os
 from app import create_app
-from app.database.db import db
+from app.database import db
 
 # Initialize the Flask application using the factory pattern
 app = create_app()

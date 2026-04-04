@@ -1,4 +1,4 @@
-from app.database.db import db
+from app.database import db
 from app.models.quiz_model import Quiz
 from app.models.question_model import Question
 from app.models.submission_model import Submission

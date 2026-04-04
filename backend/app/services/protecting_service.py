@@ -1,4 +1,4 @@
-from app.database.db import db
+from app.database import db
 from app.models.user_model import User
 from datetime import datetime
 

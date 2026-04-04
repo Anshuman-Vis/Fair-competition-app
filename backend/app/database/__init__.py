@@ -1,12 +1,7 @@
 """
-Database configuration and models
+Database Configuration
+Centralized database setup for the Flask application.
 """
-from flask_sqlalchemy import SQLAlchemy
+from app import db
 
-db = SQLAlchemy()
-
-def init_db(app):
-    """Initialize database with Flask app"""
-    db.init_app(app)
-    with app.app_context():
-        db.create_all()
+__all__ = ['db']

@@ -1,26 +1,26 @@
 #!/bin/bash
-# Fair Competition App - Mac/Linux Launcher
 
+# Fair Competition App - One-Click Startup Script
+# This script starts both frontend and backend services
+
+echo "🚀 Starting Fair Competition App..."
 echo ""
-echo "Starting Fair Competition App for Mac/Linux..."
+echo "🐳 Building and starting Docker containers..."
 echo ""
 
-# Check if Docker is installed
-if ! command -v docker &> /dev/null; then
-    echo "ERROR: Docker is not installed"
-    echo "Please install Docker from https://www.docker.com/products/docker-desktop"
-    exit 1
-fi
+# Navigate to docker directory and start services
+cd "$(dirname "$0")/docker" || exit
 
-# Check if Docker Compose is installed
-if ! command -v docker-compose &> /dev/null; then
-    echo "ERROR: Docker Compose is not installed"
-    echo "Please install Docker Compose from https://docs.docker.com/compose/install/"
-    exit 1
-fi
-
-# Start Docker Compose
-cd docker
-echo "Starting services with Docker Compose..."
+# Build and start services
 docker-compose up --build
 
+# If docker-compose fails, try the alternative
+if [ $? -ne 0 ]; then
+    echo ""
+    echo "❌ Docker not available or error occurred."
+    echo ""
+    echo "If Docker is not installed, you can start services manually:"
+    echo "1. Backend: cd backend && pip install -r requirements.txt && python main.py"
+    echo "2. Frontend: cd frontend && npm install && npm run dev"
+    exit 1
+fi

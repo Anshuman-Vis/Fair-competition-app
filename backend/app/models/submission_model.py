@@ -68,12 +68,3 @@ class Submission(db.Model):
 
     def __repr__(self):
         return f'<Submission User {self.user_id} Quiz {self.quiz_id}>'
-            "quiz_id": self.quiz_id,
-            "quiz_title": self.target_quiz.title if self.target_quiz else "Deleted Quiz",
-            "score": self.score,
-            "time_taken": self.time_taken,
-            "submitted_at": self.submitted_at.isoformat(),
-            "is_flagged": self.is_flagged,
-            "violation_count": self.violation_count
-        }
->>>>>>> 6572d96867cc9bcaa00e4d8f29e60b92dd7827a9

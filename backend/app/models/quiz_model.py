@@ -86,4 +86,3 @@ class Quiz(db.Model):
             "is_active": self.is_active,
             "total_questions": len(self.questions) if self.questions else 0
         }
->>>>>>> 6572d96867cc9bcaa00e4d8f29e60b92dd7827a9

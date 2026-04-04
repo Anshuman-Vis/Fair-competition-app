@@ -1,22 +1,45 @@
-# Fair Competition App - PowerShell Launcher
+# Fair Competition App - PowerShell Startup Script
+# Run this script to start both frontend and backend services
 
 Write-Host ""
-Write-Host "Starting Fair Competition App with PowerShell..." -ForegroundColor Green
+Write-Host "========================================" -ForegroundColor Cyan
+Write-Host "🚀 Fair Competition App Launcher" -ForegroundColor Green
+Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 
-# Check if Docker is installed
-$dockerTest = & docker --version 2>&1
+# Change to docker directory
+Push-Location (Join-Path $PSScriptRoot "docker")
+
+# Start Docker Compose
+Write-Host "🐳 Starting Docker containers..." -ForegroundColor Yellow
+Write-Host ""
+
+docker-compose up --build
+
 if ($LASTEXITCODE -ne 0) {
-    Write-Host "ERROR: Docker is not installed or not in PATH" -ForegroundColor Red
-    Write-Host "Please install Docker Desktop from https://www.docker.com/products/docker-desktop" -ForegroundColor Yellow
-    Read-Host "Press Enter to exit"
+    Write-Host ""
+    Write-Host "========================================" -ForegroundColor Red
+    Write-Host "❌ Docker Error" -ForegroundColor Red
+    Write-Host "========================================" -ForegroundColor Red
+    Write-Host ""
+    
+    Write-Host "Docker is not available or an error occurred." -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host "Fallback: Start services manually:" -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host "1. Terminal 1 - Backend:" -ForegroundColor Cyan
+    Write-Host "   cd backend"
+    Write-Host "   pip install -r requirements.txt"
+    Write-Host "   python main.py"
+    Write-Host ""
+    Write-Host "2. Terminal 2 - Frontend:" -ForegroundColor Cyan
+    Write-Host "   cd frontend"
+    Write-Host "   npm install"
+    Write-Host "   npm run dev"
+    Write-Host ""
+    
+    Pop-Location
     exit 1
 }
 
-Write-Host "Docker found: $dockerTest" -ForegroundColor Green
-
-# Change to docker directory
-Set-Location docker
-Write-Host "Starting services with Docker Compose..." -ForegroundColor Cyan
-docker-compose up --build
-
+Pop-Location

@@ -67,3 +67,12 @@ class User(db.Model):
 
     def __repr__(self):
         return f'<User {self.username}>'
+        return {
+            "id": self.id,
+            "username": self.username,
+            "email": self.email,
+            "role": self.role,
+            "is_disqualified": self.is_disqualified,
+            "total_violations": self.total_violations
+        }
+>>>>>>> 6572d96867cc9bcaa00e4d8f29e60b92dd7827a9

@@ -72,3 +72,18 @@ class Quiz(db.Model):
 
     def __repr__(self):
         return f'<Quiz {self.title}>'
+    
+    # REMOVED: submissions = db.relationship(...) 
+    # This is now handled by Submission model backref='submissions_list'
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "description": self.description,
+            "category": self.category,
+            "time_limit": self.time_limit,
+            "is_active": self.is_active,
+            "total_questions": len(self.questions) if self.questions else 0
+        }
+>>>>>>> 6572d96867cc9bcaa00e4d8f29e60b92dd7827a9

@@ -8,6 +8,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 const Login = lazy(() => import('./pages/Login.jsx'));
 const Register = lazy(() => import('./pages/Register.jsx'));
 const Dashboard = lazy(() => import('./pages/Dashboard.jsx'));
+const AdminDashboard = lazy(() => import('./pages/AdminDashboard.jsx'));
 const QuizPage = lazy(() => import('./pages/QuizPage.jsx'));
 const CodingPage = lazy(() => import('./pages/CodingPage.jsx'));
 const ResultPage = lazy(() => import('./pages/ResultPage.jsx'));
@@ -15,13 +16,13 @@ const ResultPage = lazy(() => import('./pages/ResultPage.jsx'));
 /**
  * Protected Route Component
  *
- * Implements authentication-based routing with automatic redirects.
- * Ensures secure access to protected pages by validating JWT tokens.
+ * Implements authentication-based access control for user pages.
+ * Requires valid authentication token for access to protected content.
  *
  * Security Features:
  * - Token validation from localStorage
- * - Automatic redirect to login on unauthorized access
- * - Prevents unauthorized page access
+ * - Automatic redirect to login for unauthenticated users
+ * - Prevents unauthorized access to user-specific pages
  *
  * @param {Object} props - Component props
  * @param {React.Component} props.children - Protected component to render
@@ -30,8 +31,59 @@ function ProtectedRoute({ children }) {
   // Security: Validate authentication token
   const token = localStorage.getItem('token');
 
-  // Redirect to login if no valid token exists
-  return token ? children : <Navigate to="/" replace />;
+  if (!token) {
+    return <Navigate to="/" replace />;
+  }
+
+  // Security: Basic token validation (could be enhanced with expiry check)
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    // Token is valid, allow access
+  } catch (error) {
+    // Invalid token format
+    localStorage.removeItem('token');
+    return <Navigate to="/" replace />;
+  }
+
+  return children;
+}
+
+/**
+ * Admin Protected Route Component
+ *
+ * Implements role-based access control for admin-only pages.
+ * Requires both authentication and admin role for access.
+ *
+ * Security Features:
+ * - Token validation from localStorage
+ * - JWT role claim verification
+ * - Automatic redirect to dashboard for non-admin users
+ * - Prevents unauthorized admin page access
+ *
+ * @param {Object} props - Component props
+ * @param {React.Component} props.children - Admin component to render
+ */
+function AdminProtectedRoute({ children }) {
+  // Security: Validate authentication token
+  const token = localStorage.getItem('token');
+
+  if (!token) {
+    return <Navigate to="/" replace />;
+  }
+
+  // Security: Validate admin role from JWT (basic check)
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    if (payload.role !== 'admin') {
+      return <Navigate to="/dashboard" replace />;
+    }
+  } catch (error) {
+    // Invalid token format
+    localStorage.removeItem('token');
+    return <Navigate to="/" replace />;
+  }
+
+  return children;
 }
 
 /**
@@ -108,6 +160,14 @@ function App() {
               <ProtectedRoute>
                 <ResultPage />
               </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <AdminProtectedRoute>
+                <AdminDashboard />
+              </AdminProtectedRoute>
             }
           />
 

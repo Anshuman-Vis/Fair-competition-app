@@ -42,6 +42,7 @@ class Quiz(db.Model):
     questions = db.relationship('Question', backref='quiz', lazy=True, cascade='all, delete-orphan')
     submissions = db.relationship('Submission', backref='quiz', lazy=True)
     results = db.relationship('Result', backref='quiz', lazy=True)
+    assignments = db.relationship('QuizAssignment', back_populates='quiz', lazy=True, cascade='all, delete-orphan')
 
     def to_dict(self):
         """Convert quiz object to dictionary for API responses."""

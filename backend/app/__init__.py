@@ -53,6 +53,7 @@ def create_app(config_name=None):
     from app.routes.result_routes import result_bp
     from app.routes.submission_routes import submission_bp
     from app.routes.violation_routes import violation_bp
+    from app.routes.admin_routes import admin_bp
     from app.routes.health_routes import health_bp
 
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
@@ -60,6 +61,7 @@ def create_app(config_name=None):
     app.register_blueprint(result_bp, url_prefix='/api/results')
     app.register_blueprint(submission_bp, url_prefix='/api/submissions')
     app.register_blueprint(violation_bp, url_prefix='/api/violations')
+    app.register_blueprint(admin_bp, url_prefix='/api/admin')
     app.register_blueprint(health_bp, url_prefix='/api/health')
 
     # Health check endpoint

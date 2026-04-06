@@ -1,8 +1,24 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FaTrophy, FaPlay, FaSignOutAlt, FaChartBar, FaClock, FaQuestionCircle, FaUser } from 'react-icons/fa';
+import { FaTrophy, FaPlay, FaSignOutAlt, FaChartBar, FaClock, FaQuestionCircle, FaUser, FaCog } from 'react-icons/fa';
 import api from '../services/api';
+
+/**
+ * Helper function to check if user is admin from JWT token
+ */
+const isAdmin = () => {
+  const token = localStorage.getItem('token');
+  if (!token) return false;
+
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload.role === 'admin';
+  } catch (error) {
+    console.error('Error parsing JWT token:', error);
+    return false;
+  }
+};
 
 /**
  * Dashboard Page Component
@@ -149,6 +165,20 @@ const Dashboard = () => {
             <FaSignOutAlt />
             Logout
           </motion.button>
+          {isAdmin() && (
+            <motion.button
+              onClick={() => navigate('/admin')}
+              className="bg-linear-to-br from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 px-6 py-3 rounded-xl font-semibold transition-all flex items-center gap-2 shadow-lg ml-4"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              <FaCog />
+              Admin Panel
+            </motion.button>
+          )}
         </div>
       </motion.div>
 

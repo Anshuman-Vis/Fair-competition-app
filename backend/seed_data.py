@@ -7,6 +7,7 @@ from app.database import db
 from app.models.user_model import User
 from app.models.quiz_model import Quiz
 from app.models.question_model import Question
+from app.models.quiz_assignment_model import QuizAssignment
 from werkzeug.security import generate_password_hash
 from datetime import datetime, timedelta
 
@@ -120,6 +121,16 @@ def seed_database():
 
         for question in questions_quiz1:
             db.session.add(question)
+
+        # Assign quiz 1 to the sample student
+        print("✅ Assigning quiz 1 to sample student...")
+        assignment = QuizAssignment(
+            user=student,
+            quiz=quiz1,
+            assigned_by_user=admin,
+            is_active=True
+        )
+        db.session.add(assignment)
 
         # Create Sample Quiz 2
         print("📝 Creating sample quiz 2...")

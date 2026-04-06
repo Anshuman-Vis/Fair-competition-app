@@ -41,6 +41,13 @@ class User(db.Model):
     submissions = db.relationship('Submission', backref='user', lazy=True)
     results = db.relationship('Result', backref='user', lazy=True)
     violations = db.relationship('Violation', backref='user', lazy=True)
+    assignments = db.relationship(
+        'QuizAssignment',
+        back_populates='user',
+        lazy=True,
+        cascade='all, delete-orphan',
+        foreign_keys='QuizAssignment.user_id'
+    )
 
     def set_password(self, password):
         """Hash and set the user's password."""

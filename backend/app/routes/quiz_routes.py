@@ -3,13 +3,28 @@ Quiz Routes
 Handles quiz management, questions, and quiz taking functionality.
 """
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import get_jwt, jwt_required, get_jwt_identity
 from app.database import db
 from app.models.quiz_model import Quiz
 from app.models.question_model import Question
 from app.models.submission_model import Submission
+from app.models.quiz_assignment_model import QuizAssignment
 
 quiz_bp = Blueprint('quiz', __name__)
+
+
+def _is_admin():
+    claims = get_jwt()
+    return claims.get('role') == 'admin'
+
+
+def _user_is_assigned_to_quiz(user_id, quiz_id):
+    return QuizAssignment.query.filter_by(
+        user_id=user_id,
+        quiz_id=quiz_id,
+        is_active=True
+    ).first() is not None
+
 
 @quiz_bp.route('/all', methods=['GET'])
 @jwt_required()
@@ -20,7 +35,16 @@ def get_all_quizzes():
     Returns only active quizzes that are currently available.
     """
     try:
-        quizzes = Quiz.query.filter_by(is_active=True).all()
+        user_id = get_jwt_identity()
+
+        if _is_admin():
+            quizzes = Quiz.query.filter_by(is_active=True).all()
+        else:
+            quizzes = Quiz.query.join(QuizAssignment).filter(
+                Quiz.is_active == True,
+                QuizAssignment.user_id == user_id,
+                QuizAssignment.is_active == True
+            ).all()
 
         # Filter to only available quizzes
         available_quizzes = [quiz for quiz in quizzes if quiz.is_available()]
@@ -49,6 +73,10 @@ def get_quiz(quiz_id):
 
         if not quiz.is_available():
             return jsonify({'error': 'Quiz is not currently available'}), 403
+
+        user_id = get_jwt_identity()
+        if not _is_admin() and not _user_is_assigned_to_quiz(user_id, quiz_id):
+            return jsonify({'error': 'You are not assigned to this quiz'}), 403
 
         # Get questions ordered by their order field
         questions = Question.query.filter_by(quiz_id=quiz_id).order_by(Question.order).all()
@@ -87,6 +115,9 @@ def start_quiz(quiz_id):
 
         if not quiz.is_available():
             return jsonify({'error': 'Quiz is not currently available'}), 403
+
+        if not _is_admin() and not _user_is_assigned_to_quiz(user_id, quiz_id):
+            return jsonify({'error': 'You are not assigned to this quiz'}), 403
 
         # Check if user already has a completed submission
         existing_submission = Submission.query.filter_by(

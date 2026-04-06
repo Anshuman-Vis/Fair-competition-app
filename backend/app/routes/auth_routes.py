@@ -45,7 +45,7 @@ def register():
         if error:
             return jsonify({'error': error}), 400
 
-        token = create_access_token(identity=user.id)
+        token = create_access_token(identity=user.id, additional_claims={'role': user.role})
 
         return jsonify({
             'message': 'User registered successfully',
@@ -84,7 +84,7 @@ def login():
             return jsonify({'error': error}), 401
 
         # Create JWT token
-        token = create_access_token(identity=user.id)
+        token = create_access_token(identity=user.id, additional_claims={'role': user.role})
 
         return jsonify({
             'message': 'Login successful',

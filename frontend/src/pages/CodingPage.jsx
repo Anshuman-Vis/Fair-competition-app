@@ -64,68 +64,225 @@ const CodingPage = () => {
   }
 
   return (
-    <div className="h-screen flex flex-col bg-slate-900 text-white">
-      <Proctor competitionId={challengeId} onDisqualify={() => navigate('/')} />
+  <div style={{
+    display: "flex",
+    height: "100vh",
+    background: "#f8fafc",
+    fontFamily: "system-ui"
+  }}>
 
-      {/* Header */}
-      <div className="bg-slate-800 p-4 flex justify-between items-center border-b border-slate-700">
-        <div>
-          <h1 className="text-2xl font-bold">{challenge?.title || 'Coding Challenge'}</h1>
-          <p className="text-slate-300 text-sm">{challenge?.difficulty}</p>
-        </div>
-        <Timer initialSeconds={challenge?.duration * 60 || 3600} onTimeUp={() => handleSubmitCode()} />
+    <Proctor competitionId={challengeId} onDisqualify={() => navigate('/')} />
+
+    {/* Sidebar */}
+    <div style={{
+      width: "230px",
+      background: "#ffffff",
+      borderRight: "1px solid #e5e7eb",
+      display: "flex",
+      flexDirection: "column"
+    }}>
+
+      <div style={{
+        padding: "20px",
+        borderBottom: "1px solid #e5e7eb"
+      }}>
+        <h2 style={{ fontWeight: "700" }}>
+          Coding Arena
+        </h2>
       </div>
 
-      <div className="flex flex-1 overflow-hidden">
-        {/* Problem Description */}
-        <div className="w-1/3 bg-slate-800 p-6 overflow-y-auto border-r border-slate-700">
-          <h2 className="text-xl font-bold mb-4">Problem</h2>
-          <div className="text-slate-300 whitespace-pre-wrap text-sm">
-            {challenge?.description || 'No description provided'}
-          </div>
-          <div className="mt-6">
-            <h3 className="text-lg font-bold mb-2">Sample Input</h3>
-            <pre className="bg-slate-900 p-3 rounded text-xs overflow-x-auto">
-              {challenge?.sample_input || ''}
-            </pre>
-          </div>
-          <div className="mt-4">
-            <h3 className="text-lg font-bold mb-2">Sample Output</h3>
-            <pre className="bg-slate-900 p-3 rounded text-xs overflow-x-auto">
-              {challenge?.sample_output || ''}
-            </pre>
-          </div>
+      <div style={{ padding: "10px" }}>
+
+        <div
+          style={{ padding: "10px", cursor: "pointer" }}
+          onClick={() => navigate('/dashboard')}
+        >
+          Dashboard
         </div>
 
-        {/* Code Editor and Output */}
-        <div className="w-2/3 flex flex-col">
+        <div
+          style={{
+            padding: "10px",
+            background: "#e6f1fb"
+          }}
+        >
+          Coding
+        </div>
+
+        <div
+          style={{ padding: "10px", cursor: "pointer" }}
+          onClick={() => navigate('/results')}
+        >
+          Results
+        </div>
+
+      </div>
+
+    </div>
+
+
+    {/* Main */}
+    <div style={{
+      flex: 1,
+      display: "flex",
+      flexDirection: "column"
+    }}>
+
+      {/* Header */}
+      <div style={{
+        padding: "15px 20px",
+        background: "white",
+        borderBottom: "1px solid #e5e7eb",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center"
+      }}>
+        <div>
+          <h1 style={{
+            fontSize: "20px",
+            fontWeight: "600"
+          }}>
+            {challenge?.title || "Coding Challenge"}
+          </h1>
+
+          <p style={{
+            fontSize: "13px",
+            color: "#6b7280"
+          }}>
+            {challenge?.difficulty}
+          </p>
+        </div>
+
+        <Timer
+          initialSeconds={challenge?.duration * 60 || 3600}
+          onTimeUp={() => handleSubmitCode()}
+        />
+      </div>
+
+
+      {/* Content */}
+      <div style={{
+        display: "flex",
+        flex: 1
+      }}>
+
+        {/* Problem */}
+        <div style={{
+          width: "35%",
+          background: "white",
+          padding: "20px",
+          borderRight: "1px solid #e5e7eb",
+          overflow: "auto"
+        }}>
+
+          <h2 style={{
+            fontWeight: "600",
+            marginBottom: "10px"
+          }}>
+            Problem
+          </h2>
+
+          <div style={{
+            fontSize: "14px",
+            color: "#374151"
+          }}>
+            {challenge?.description}
+          </div>
+
+          <div style={{ marginTop: "20px" }}>
+            <h3>Sample Input</h3>
+            <pre style={{
+              background: "#f3f4f6",
+              padding: "10px",
+              borderRadius: "6px"
+            }}>
+              {challenge?.sample_input}
+            </pre>
+          </div>
+
+          <div style={{ marginTop: "20px" }}>
+            <h3>Sample Output</h3>
+            <pre style={{
+              background: "#f3f4f6",
+              padding: "10px",
+              borderRadius: "6px"
+            }}>
+              {challenge?.sample_output}
+            </pre>
+          </div>
+
+        </div>
+
+
+        {/* Editor */}
+        <div style={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column"
+        }}>
+
           <CodeEditor
             code={code}
             onChange={setCode}
             language={challenge?.language || 'python'}
           />
-          <div className="bg-slate-800 border-t border-slate-700 p-4 flex gap-2">
+
+          <div style={{
+            padding: "10px",
+            background: "white",
+            borderTop: "1px solid #e5e7eb",
+            display: "flex",
+            gap: "10px"
+          }}>
+
             <button
               onClick={handleRunCode}
-              className="flex-1 bg-blue-600 hover:bg-blue-700 py-2 rounded font-semibold"
+              style={{
+                flex: 1,
+                background: "#3b82f6",
+                color: "white",
+                padding: "10px",
+                border: "none",
+                borderRadius: "6px"
+              }}
             >
               Run Code
             </button>
+
             <button
               onClick={handleSubmitCode}
-              className="flex-1 bg-green-600 hover:bg-green-700 py-2 rounded font-semibold"
+              style={{
+                flex: 1,
+                background: "#22c55e",
+                color: "white",
+                padding: "10px",
+                border: "none",
+                borderRadius: "6px"
+              }}
             >
               Submit Solution
             </button>
+
           </div>
-          <div className="flex-1 bg-slate-900 p-4 border-t border-slate-700 overflow-y-auto">
-            <h3 className="text-lg font-bold mb-2">Output</h3>
-            <pre className="text-slate-300 text-sm whitespace-pre-wrap">{output}</pre>
+
+          <div style={{
+            flex: 1,
+            padding: "20px",
+            background: "#f3f4f6",
+            overflow: "auto"
+          }}>
+            <h3>Output</h3>
+            <pre>{output}</pre>
           </div>
+
         </div>
+
       </div>
+
     </div>
-  );
+
+  </div>
+);
 };
 
 export default CodingPage;

@@ -61,64 +61,194 @@ const QuizPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-900 text-white p-8">
-      <Proctor competitionId={quizId} onDisqualify={() => navigate('/')} />
+  <div style={{
+    display: "flex",
+    height: "100vh",
+    background: "#f8fafc",
+    fontFamily: "system-ui"
+  }}>
 
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-8 bg-slate-800 p-6 rounded-lg">
-          <div>
-            <h1 className="text-3xl font-bold">{quiz.title}</h1>
-            <p className="text-slate-300 mt-2">{quiz.description}</p>
-          </div>
-          <Timer
-            initialSeconds={timeRemaining}
-            onTimeUp={() => {
-              alert('Time is up! Auto-submitting...');
-              handleSubmit();
-            }}
-          />
-        </div>
+    <Proctor competitionId={quizId} onDisqualify={() => navigate('/')} />
 
-        {/* Questions */}
-        <div className="space-y-6">
-          {quiz.questions && quiz.questions.map((q, idx) => (
-            <div key={q.id} className="bg-slate-800 p-6 rounded-lg border border-slate-700">
-              <h3 className="text-lg font-bold mb-4">
-                Question {idx + 1}: {q.text}
-              </h3>
-              <div className="space-y-2">
-                {q.options &&
-                  q.options.map((option, optIdx) => (
-                    <label key={optIdx} className="flex items-center cursor-pointer hover:bg-slate-700 p-2 rounded">
-                      <input
-                        type="radio"
-                        name={`question-${q.id}`}
-                        value={option}
-                        checked={answers[q.id] === option}
-                        onChange={() => handleAnswerChange(q.id, option)}
-                        className="mr-3"
-                      />
-                      <span>{option}</span>
-                    </label>
-                  ))}
-              </div>
-            </div>
-          ))}
-        </div>
+    {/* Sidebar */}
+    <div style={{
+      width: "230px",
+      background: "#ffffff",
+      borderRight: "1px solid #e5e7eb",
+      display: "flex",
+      flexDirection: "column"
+    }}>
 
-        {/* Submit Button */}
-        <div className="mt-8 text-center">
-          <button
-            onClick={handleSubmit}
-            className="bg-green-600 hover:bg-green-700 px-8 py-3 rounded-lg font-bold text-lg"
-          >
-            Submit Quiz
-          </button>
-        </div>
+      <div style={{
+        padding: "20px",
+        borderBottom: "1px solid #e5e7eb"
+      }}>
+        <h2 style={{ fontWeight: "700" }}>
+          Quiz Arena
+        </h2>
       </div>
+
+      <div style={{ padding: "10px" }}>
+
+        <div
+          style={{ padding: "10px", cursor: "pointer" }}
+          onClick={() => navigate('/dashboard')}
+        >
+          Dashboard
+        </div>
+
+        <div
+          style={{
+            padding: "10px",
+            background: "#e6f1fb"
+          }}
+        >
+          Quiz
+        </div>
+
+        <div
+          style={{ padding: "10px", cursor: "pointer" }}
+          onClick={() => navigate('/results')}
+        >
+          Results
+        </div>
+
+      </div>
+
     </div>
-  );
+
+
+    {/* Main */}
+    <div style={{
+      flex: 1,
+      padding: "20px",
+      overflow: "auto"
+    }}>
+
+      {/* Header */}
+      <div style={{
+        display: "flex",
+        justifyContent: "space-between",
+        background: "white",
+        padding: "20px",
+        borderRadius: "8px",
+        marginBottom: "20px",
+        border: "1px solid #e5e7eb"
+      }}>
+
+        <div>
+          <h1 style={{
+            fontSize: "22px",
+            fontWeight: "600"
+          }}>
+            {quiz.title}
+          </h1>
+
+          <p style={{
+            color: "#6b7280",
+            marginTop: "5px"
+          }}>
+            {quiz.description}
+          </p>
+        </div>
+
+        <Timer
+          initialSeconds={timeRemaining}
+          onTimeUp={() => {
+            alert('Time is up! Auto-submitting...');
+            handleSubmit();
+          }}
+        />
+
+      </div>
+
+
+      {/* Questions */}
+      <div>
+
+        {quiz.questions && quiz.questions.map((q, idx) => (
+
+          <div
+            key={q.id}
+            style={{
+              background: "white",
+              padding: "20px",
+              borderRadius: "8px",
+              marginBottom: "15px",
+              border: "1px solid #e5e7eb"
+            }}
+          >
+
+            <h3 style={{
+              marginBottom: "15px",
+              fontWeight: "600"
+            }}>
+              Question {idx + 1}: {q.text}
+            </h3>
+
+            {q.options && q.options.map((option, optIdx) => (
+
+              <label
+                key={optIdx}
+                style={{
+                  display: "flex",
+                  padding: "10px",
+                  border: "1px solid #e5e7eb",
+                  borderRadius: "6px",
+                  marginBottom: "8px",
+                  cursor: "pointer"
+                }}
+              >
+
+                <input
+                  type="radio"
+                  name={`question-${q.id}`}
+                  value={option}
+                  checked={answers[q.id] === option}
+                  onChange={() => handleAnswerChange(q.id, option)}
+                  style={{ marginRight: "10px" }}
+                />
+
+                {option}
+
+              </label>
+
+            ))}
+
+          </div>
+
+        ))}
+
+      </div>
+
+
+      {/* Submit */}
+      <div style={{
+        textAlign: "center",
+        marginTop: "20px"
+      }}>
+
+        <button
+          onClick={handleSubmit}
+          style={{
+            background: "#22c55e",
+            color: "white",
+            padding: "12px 30px",
+            border: "none",
+            borderRadius: "6px",
+            fontSize: "16px",
+            cursor: "pointer"
+          }}
+        >
+          Submit Quiz
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+);
 };
 
 export default QuizPage;

@@ -34,60 +34,172 @@ const ResultPage = () => {
   const passed = percentage >= 60;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex flex-col items-center justify-center p-4">
-      <div
-        className={`text-center p-12 rounded-3xl border-2 max-w-2xl ${
-          passed
-            ? 'bg-green-900 border-green-500'
-            : 'bg-red-900 border-red-500'
-        }`}
-      >
-        <div className="text-6xl mb-4">{passed ? '✅' : '❌'}</div>
-        <h1 className={`text-5xl font-black mb-4 ${
-          passed ? 'text-green-300' : 'text-red-300'
-        }`}>
-          {passed ? 'Great Job!' : 'Assessment Complete'}
+  <div style={{
+    display: "flex",
+    height: "100vh",
+    background: "#f8fafc",
+    fontFamily: "system-ui"
+  }}>
+
+    {/* Sidebar */}
+    <div style={{
+      width: "230px",
+      background: "#ffffff",
+      borderRight: "1px solid #e5e7eb",
+      display: "flex",
+      flexDirection: "column"
+    }}>
+
+      <div style={{
+        padding: "20px",
+        borderBottom: "1px solid #e5e7eb"
+      }}>
+        <h2 style={{ fontWeight: "700" }}>
+          Results
+        </h2>
+      </div>
+
+      <div style={{ padding: "10px" }}>
+
+        <div
+          style={{ padding: "10px", cursor: "pointer" }}
+        >
+          <Link to="/dashboard" style={{ textDecoration: "none", color: "black" }}>
+            Dashboard
+          </Link>
+        </div>
+
+        <div
+          style={{
+            padding: "10px",
+            background: "#e6f1fb"
+          }}
+        >
+          Results
+        </div>
+
+      </div>
+
+    </div>
+
+
+    {/* Main */}
+    <div style={{
+      flex: 1,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center"
+    }}>
+
+      <div style={{
+        background: "white",
+        padding: "40px",
+        borderRadius: "12px",
+        border: "1px solid #e5e7eb",
+        width: "500px",
+        textAlign: "center"
+      }}>
+
+        <div style={{
+          fontSize: "50px",
+          marginBottom: "10px"
+        }}>
+          {passed ? "✅" : "❌"}
+        </div>
+
+        <h1 style={{
+          fontSize: "26px",
+          fontWeight: "600",
+          marginBottom: "10px"
+        }}>
+          {passed ? "Great Job!" : "Assessment Complete"}
         </h1>
-        <p className="text-xl text-slate-200 mb-8">
+
+        <p style={{
+          color: "#6b7280",
+          marginBottom: "20px"
+        }}>
           {passed
-            ? 'You have successfully completed the assessment!'
-            : 'Your session has been recorded and submitted.'
+            ? "You have successfully completed the assessment!"
+            : "Your session has been recorded and submitted."
           }
         </p>
 
-        {/* Score Display */}
-        <div className="bg-slate-800 p-8 rounded-xl mb-6 border border-slate-700">
-          <div className="text-5xl font-mono font-bold text-blue-400 mb-2">
+
+        {/* Score */}
+        <div style={{
+          background: "#f3f4f6",
+          padding: "20px",
+          borderRadius: "8px",
+          marginBottom: "20px"
+        }}>
+
+          <div style={{
+            fontSize: "30px",
+            fontWeight: "600"
+          }}>
             {score} / {totalQuestions}
           </div>
-          <div className="text-2xl font-bold text-slate-300 mb-2">
+
+          <div style={{
+            fontSize: "20px",
+            marginTop: "5px"
+          }}>
             {percentage}%
           </div>
-          <div className={`text-lg font-semibold ${
-            passed ? 'text-green-300' : 'text-red-300'
-          }`}>
-            {passed ? 'PASSED' : 'SUBMITTED'}
+
+          <div style={{
+            marginTop: "10px",
+            fontWeight: "600",
+            color: passed ? "#22c55e" : "#ef4444"
+          }}>
+            {passed ? "PASSED" : "SUBMITTED"}
           </div>
+
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex gap-4 justify-center">
+
+        {/* Buttons */}
+        <div style={{
+          display: "flex",
+          gap: "10px",
+          justifyContent: "center"
+        }}>
+
           <Link
             to="/dashboard"
-            className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-bold transition"
+            style={{
+              background: "#3b82f6",
+              color: "white",
+              padding: "10px 20px",
+              borderRadius: "6px",
+              textDecoration: "none"
+            }}
           >
-            Return to Dashboard
+            Dashboard
           </Link>
+
           <button
             onClick={() => window.print()}
-            className="bg-slate-700 hover:bg-slate-600 text-white px-8 py-3 rounded-lg font-bold transition"
+            style={{
+              background: "#6b7280",
+              color: "white",
+              padding: "10px 20px",
+              border: "none",
+              borderRadius: "6px"
+            }}
           >
-            Print Results
+            Print
           </button>
+
         </div>
+
       </div>
+
     </div>
-  );
+
+  </div>
+);
 };
 
 export default ResultPage;
